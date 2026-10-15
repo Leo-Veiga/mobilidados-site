@@ -100,6 +100,9 @@ Cada push na branch `main` publica o site automaticamente no GitHub Pages
 Sem domínio próprio o site fica em `https://<usuario>.github.io/mobilidados-site/`. Esse subcaminho vem da
 variável `BASE_PATH` (ver `next.config.ts`). Com domínio próprio, basta remover `BASE_PATH` do workflow.
 
+Enquanto não aponta para `mobilidados.org`, o site pede aos buscadores para não indexá-lo (`robots` em
+`src/app/layout.tsx`). Ao apontar para o domínio, apague essa linha para o site entrar no Google.
+
 ## Licença
 
 - Código: [MIT](LICENSE)
