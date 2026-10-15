@@ -7,6 +7,8 @@ import indicadoresRmsJson from '@/data/indicadores-rms.json';
 import metaJson from '@/data/meta.json';
 import rmsJson from '@/data/rms.json';
 import { CODIGOS_FICHA, GRUPOS_INFRA, rotulo, slugIndicador, unidade } from './indicadores';
+import { enderecoFicha, fichaDoCodigo } from './metodologia';
+import { temaDoIndicador } from './temas';
 import { MODOS_TMA, type Capital, type Catalogo, type Indicadores, type ModoTma, type Nivel, type RegiaoMetropolitana, type ValorAno } from './tipos';
 
 export const capitais = capitaisJson as Capital[];
@@ -67,13 +69,23 @@ export function ultimoValor(nivel: Nivel, codigo: string, local: string): { ano:
   return { ano, valor: serie[ano] };
 }
 
+/** Resumo da ficha metodológica de um código (só fichas prontas), para o botão "i" das listas */
+export function resumoFicha(codigo: string) {
+  const f = fichaDoCodigo(codigo);
+  return f && !f.pendente ? { resumo: f.resumo, endereco: enderecoFicha(f) } : undefined;
+}
+
 /** Linhas da lista "Busca por indicadores" de um local, com o valor mais recente */
 export function indicadoresDoLocal(nivel: Nivel, local: string) {
   return listaIndicadores
     .filter(i => i.codigos[nivel])
     .map(i => {
       const u = ultimoValor(nivel, i.codigos[nivel]!, local);
-      return { slug: i.slug, nome: i.nome, unidade: i.unidade, ...(u && { valor: u.valor, ano: u.ano }) };
+      const ficha = resumoFicha(i.codigos[nivel]!);
+      return {
+        slug: i.slug, nome: i.nome, unidade: i.unidade, ...temaDoIndicador(i.slug), ...(u && { valor: u.valor, ano: u.ano }),
+        ...(ficha && { ficha }),
+      };
     });
 }
 

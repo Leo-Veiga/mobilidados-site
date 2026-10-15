@@ -6,6 +6,8 @@
 .cabecalho { display: flex; justify-content: space-between; font-weight: 700; padding: 0 8px 8px; border-bottom: 1px solid var(--borda); }
 .cabecalho span:last-child { font-weight: 600; }
 .lista { list-style: none; margin: 0; padding: 8px 0 0; }
+.item { display: flex; flex-wrap: wrap; align-items: center; }
+.item > a { flex: 1; min-width: 0; }
 .lista a { display: flex; align-items: center; gap: 12px; padding: 12px 8px; border-radius: var(--raio); }
 .lista a:hover { background: #222; }
 .lista a svg { flex-shrink: 0; }
@@ -17,5 +19,9 @@
   .painel { padding: 16px; }
   .cabecalho span:last-child { display: none; }
   .lista a { flex-wrap: wrap; }
-  .valor { width: 100%; text-align: left; padding-left: 32px; }
-}
+  .valor { width: 100%; text-align: left; padding-left: 32px; }}
+
+/* Grupos por tema (mesmos temas da ficha em PDF) */
+.tema { margin-top: 20px; }
+.nomeTema { font-size: 13px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--destaque); margin: 0; padding: 8px 8px 6px; border-bottom: 1px solid var(--borda); }
+.tema .lista { padding-top: 4px; }

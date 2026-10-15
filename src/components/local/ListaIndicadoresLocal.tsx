@@ -3,16 +3,22 @@
 import Link from 'next/link';
 import { useMemo, useState } from 'react';
 import { IconeBusca, IconeEqualizador } from '@/components/Icones';
-import { fmt } from '@/lib/formato';
+import { BotaoInfo, PainelInfo, type ResumoFicha } from '@/components/InfoFicha';
+import { fmtDado } from '@/lib/formato';
+import { agruparPorTema } from '@/lib/temas';
 import styles from './ListaIndicadoresLocal.module.css';
 
 export interface ItemIndicador {
   slug: string;
   nome: string;
   unidade: string;
+  tema: string;
+  ordem: number;
   /** Valor mais recente neste local (ausente se não houver dado) */
   valor?: number;
   ano?: number;
+  /** Resumo e endereço da ficha metodológica (ausente se a ficha não estiver pronta) */
+  ficha?: ResumoFicha;
 }
 
 const semAcento = (s: string) => s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
@@ -20,6 +26,7 @@ const semAcento = (s: string) => s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLo
 /** Lista de indicadores com o valor mais recente do local e link para a página de cada um */
 export default function ListaIndicadoresLocal({ itens, local }: { itens: ItemIndicador[]; local: string }) {
   const [texto, setTexto] = useState('');
+  const [info, setInfo] = useState<string | null>(null);
   const filtrados = useMemo(() => {
     const t = semAcento(texto.trim());
     return t ? itens.filter(i => semAcento(i.nome).includes(t)) : itens;
@@ -40,22 +47,29 @@ export default function ListaIndicadoresLocal({ itens, local }: { itens: ItemInd
         <span>Nome do indicador</span>
         <span>Valor mais recente</span>
       </div>
-      <ul className={styles.lista}>
-        {filtrados.map(i => (
-          <li key={i.slug}>
-            <Link href={`/indicadores/${i.slug}/?local=${local}`}>
-              <IconeEqualizador />
-              <span className={styles.nome}>{i.nome}</span>
-              <span className={styles.valor}>
-                {i.valor != null
-                  ? <>{fmt(i.valor, 2)} <small>{i.unidade} · {i.ano}</small></>
-                  : <small>sem dado</small>}
-              </span>
-            </Link>
-          </li>
-        ))}
-        {!filtrados.length && <li className="nota">Nenhum indicador encontrado.</li>}
-      </ul>
+      {agruparPorTema(filtrados).map(g => (
+        <section key={g.tema} className={styles.tema}>
+          <h3 className={styles.nomeTema}>{g.tema}</h3>
+          <ul className={styles.lista}>
+            {g.itens.map(i => (
+              <li key={i.slug} className={styles.item}>
+                <Link href={`/indicadores/${i.slug}/?local=${local}`}>
+                  <IconeEqualizador />
+                  <span className={styles.nome}>{i.nome}</span>
+                  <span className={styles.valor}>
+                    {i.valor != null
+                      ? <>{fmtDado(i.valor)} <small>{i.unidade} · {i.ano}</small></>
+                      : <small>sem dado</small>}
+                  </span>
+                </Link>
+                {i.ficha && <BotaoInfo id={i.slug} nome={i.nome} aberto={info === i.slug} aoClicar={() => setInfo(info === i.slug ? null : i.slug)} />}
+                {i.ficha && info === i.slug && <PainelInfo id={i.slug} ficha={i.ficha} />}
+              </li>
+            ))}
+          </ul>
+        </section>
+      ))}
+      {!filtrados.length && <p className="nota">Nenhum indicador encontrado.</p>}
     </div>
   );
 }
