@@ -6,7 +6,8 @@ import CabecalhoPagina from '@/components/CabecalhoPagina';
 import GraficosIndicador, { type DadosNivel } from '@/components/indicadores/GraficosIndicador';
 import { capitais, indicadoresPorNivel, indicadorPorSlug, listaIndicadores, rms } from '@/lib/dados';
 import { enderecoFicha, fichaDoCodigo } from '@/lib/metodologia';
-import type { Nivel } from '@/lib/tipos';
+import { REGIAO_UF } from '@/lib/regioes';
+import type { Lugar, Nivel } from '@/lib/tipos';
 
 type Params = { params: Promise<{ slug: string }> };
 
@@ -25,9 +26,9 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
   };
 }
 
-const LUGARES: Record<Nivel, { slug: string; nome: string; curto?: string }[]> = {
-  capitais: capitais.map(({ slug, nome }) => ({ slug, nome })),
-  rms: rms.map(({ slug, nome, curto }) => ({ slug, nome, curto })),
+const LUGARES: Record<Nivel, Lugar[]> = {
+  capitais: capitais.map(({ slug, nome, uf }) => ({ slug, nome, regiao: REGIAO_UF[uf] })),
+  rms: rms.map(({ slug, nome, curto, uf }) => ({ slug, nome, curto, regiao: REGIAO_UF[uf] })),
 };
 
 export default async function PaginaIndicador({ params }: Params) {

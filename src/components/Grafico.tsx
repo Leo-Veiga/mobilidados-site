@@ -36,9 +36,11 @@ interface Props {
   descricao: string;
   /** Título, subtítulo e fonte da imagem baixada pelo botão "Baixar imagem" */
   imagem: InfoImagem;
+  /** Botões liga/desliga extras, ao lado de "Baixar imagem" (ex.: mediana) */
+  alternancias?: { ativo: boolean; aoAlternar: () => void; ligado: string; desligado: string }[];
 }
 
-export default function Grafico({ config, altura = 300, descricao, imagem }: Props) {
+export default function Grafico({ config, altura = 300, descricao, imagem, alternancias = [] }: Props) {
   const canvas = useRef<HTMLCanvasElement>(null);
   const [gerando, setGerando] = useState(false);
 
@@ -63,6 +65,11 @@ export default function Grafico({ config, altura = 300, descricao, imagem }: Pro
         <canvas ref={canvas} role="img" aria-label={descricao} />
       </div>
       <div className={styles.acoes}>
+        {alternancias.map(a => (
+          <button key={a.ligado} type="button" className={styles.botao} aria-pressed={a.ativo} onClick={a.aoAlternar}>
+            {a.ativo ? a.ligado : a.desligado}
+          </button>
+        ))}
         <button type="button" className={styles.botao} onClick={baixar} disabled={gerando}>
           <IconeImagem tamanho={18} /> {gerando ? 'Gerando…' : 'Baixar imagem'}
         </button>
