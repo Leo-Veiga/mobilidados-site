@@ -5,7 +5,7 @@
    Só roda no build (Node). */
 import fs from 'node:fs';
 import path from 'node:path';
-import { TEMAS } from './temas';
+import { TEMAS } from './organizacao';
 
 const PASTA = path.join(process.cwd(), 'dados', 'metodologia');
 
@@ -114,8 +114,8 @@ export const fichas: Ficha[] = fs.readdirSync(PASTA)
 
 /** Ordem das fichas = ordem dos temas e indicadores do site (TEMAS); fichas sem indicador no site vão para o fim */
 function ordem(f: Ficha): number {
-  const todos = TEMAS.flatMap(t => t.codigos);
-  const i = todos.findIndex(codigo => cobre(f, codigo));
+  const todos = TEMAS.flatMap(t => t.indicadores);
+  const i = todos.findIndex(ind => cobre(f, ind.principal));
   return i < 0 ? 9999 : i;
 }
 

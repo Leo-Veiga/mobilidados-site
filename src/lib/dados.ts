@@ -6,10 +6,10 @@ import indicadoresCapitaisJson from '@/data/indicadores-capitais.json';
 import indicadoresRmsJson from '@/data/indicadores-rms.json';
 import metaJson from '@/data/meta.json';
 import rmsJson from '@/data/rms.json';
-import { CODIGOS_FICHA, GRUPOS_INFRA, rotulo, slugIndicador, unidade } from './indicadores';
 import { enderecoFicha, fichaDoCodigo } from './metodologia';
-import { temaDoIndicador } from './temas';
+import { CODIGOS_FICHA, GRUPOS_INFRA, rotulo, slugIndicador, unidade } from './indicadores';
 import { MODOS_TMA, type Capital, type Catalogo, type Indicadores, type ModoTma, type Nivel, type RegiaoMetropolitana, type ValorAno } from './tipos';
+import { temaDoIndicador } from './temas';
 
 export const capitais = capitaisJson as Capital[];
 export const rms = rmsJson as RegiaoMetropolitana[];
