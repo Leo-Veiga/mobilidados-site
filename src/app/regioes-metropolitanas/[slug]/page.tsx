@@ -44,6 +44,12 @@ export default async function PaginaRM({ params }: Params) {
     <>
       <CabecalhoPagina titulo={r.nome} voltar={{ href: '/regioes-metropolitanas/', texto: 'Voltar para localizações' }}>
         <p className="centro" style={{ margin: '8px 0 0', fontWeight: 600 }}>({r.sigla})</p>
+        <p className="centro" style={{ margin: '16px 0 0' }}>
+          <a className="botao" href={asset(`/regioes-metropolitanas/${r.slug}/ficha.pdf`)} target="_blank" rel="noopener">
+            Baixar ficha da região (PDF)
+          </a>
+        </p>
+        <p className="centro nota" style={{ margin: '8px 0 0' }}>Resumo com os principais dados da {r.sigla}, gerado automaticamente.</p>
       </CabecalhoPagina>
 
       <div className="container-texto">
@@ -63,6 +69,7 @@ export default async function PaginaRM({ params }: Params) {
           <h2 id="titulo-indicadores" className={styles.titulo}>Busca por indicadores</h2>
           <ListaIndicadoresLocal itens={indicadoresDoLocal('rms', r.slug)} local={r.slug} />
         </section>
+
       </div>
     </>
   );
